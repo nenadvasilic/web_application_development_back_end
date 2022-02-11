@@ -41,8 +41,8 @@ export class Article {
   })
   status: "available" | "visible" | "hidden";
 
-  @Column("tinyint", { name: "is_promoted", width: 1, default: () => "'0'" })
-  isPromoted: boolean;
+  @Column("tinyint", { name: "is_promoted", unsigned: true })
+  isPromoted: number;
 
   @Column("timestamp", {
     name: "created_at",
