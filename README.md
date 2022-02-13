@@ -1,3 +1,10 @@
+# Aplikacija za učenje NestJS
+
+## Aplikacija za onlajn prodaju tehničke opreme
+Ovo je aplikacija koju koristimo za učenje NestJS razvojnog okvira...
+
+----------------------------------------------------------------------------------
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p>
