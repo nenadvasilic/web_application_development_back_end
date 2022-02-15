@@ -15,6 +15,7 @@ import * as sharp from "sharp";
 import { EditArticleDto } from "src/dtos/article/edit.article.dto";
 import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
 import { RoleCheckedGuard } from "src/misc/role.checked.guard";
+import { ArticleSearchDto } from "src/dtos/article/article.search.dto";
 
 @Controller('api/article')
 @Crud({
@@ -224,5 +225,12 @@ export class ArticleController {
     }
 
     return new ApiResponse('ok', 0, 'One photo deleted!');
+  }
+
+  @Post('search')
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles('administrator', 'user')
+  async search(@Body() data: ArticleSearchDto): Promise<Article[]> {
+    return await this.service.search(data);
   }
 }
