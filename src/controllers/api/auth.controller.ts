@@ -162,7 +162,7 @@ export class AuthController {
     jwtData.identity = jwtRefreshData.identity;   
     jwtData.exp = this.getDatePlus(60 * 5); // 5 minuta
     jwtData.ip = jwtRefreshData.ip;
-    jwtData.ua = jwt.refresh.ua;
+    jwtData.ua = jwtRefreshData.ua;
 
     let token: string = jwt.sign(jwtData.toPlainObject(), jwtSecret);
 
