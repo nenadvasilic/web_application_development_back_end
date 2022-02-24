@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { AppController } from './controllers/app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DatabaseConfiguration } from 'config/database.configuration';
@@ -30,9 +30,10 @@ import { UserCartController } from './controllers/api/user.cart.controller';
 import { OrderService } from './services/order/order.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MailConfig } from 'config/mail.config';
-import { OrderMailerService } from './services/order/order.mailer.service';
+import { OrderMailer } from './services/order/order.mailer.service';
 import { AdministratorOrderController } from './controllers/api/administrator.order.controller';
 import { UserToken } from './entities/user-token.entity';
+import { AdministratorToken } from './entities/administrator-token.entity';
 
 @Module({
   imports: [
@@ -56,24 +57,25 @@ import { UserToken } from './entities/user-token.entity';
         Photo,
         User,
         UserToken,
+        AdministratorToken,
       ]
     }),
     TypeOrmModule.forFeature([
       Administrator,
-        ArticleFeature,
-        ArticlePrice,
-        Article,
-        CartArticle,
-        Cart,
-        Category,
-        Feature,
-        Order,
-        Photo,
-        User,
-        UserToken,
+      ArticleFeature,
+      ArticlePrice,
+      Article,
+      CartArticle,
+      Cart,
+      Category,
+      Feature,
+      Order,
+      Photo,
+      User,
+      UserToken,
+      AdministratorToken,
     ]),
     MailerModule.forRoot({
-      // smtps://username:password@smtp.gmail.com
       transport: 'smtps://' + MailConfig.username + ':' +
                               MailConfig.password + '@' +
                               MailConfig.hostname,
@@ -101,7 +103,7 @@ import { UserToken } from './entities/user-token.entity';
     UserService,
     CartService,
     OrderService,
-    OrderMailerService,
+    OrderMailer,
   ],
   exports: [
     AdministratorService,

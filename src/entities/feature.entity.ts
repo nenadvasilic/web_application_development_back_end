@@ -3,34 +3,37 @@ import {
   Entity,
   Index,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  ManyToMany,
+  JoinTable
 } from "typeorm";
 import { ArticleFeature } from "./article-feature.entity";
-import { Article } from "./article.entity";
 import { Category } from "./category.entity";
+import { Article } from "./article.entity";
 import * as Validator from 'class-validator';
 
-@Index("uq_feature_name_category_id", ["name", "categoryId"], { unique: true })
 @Index("fk_feature_category_id", ["categoryId"], {})
-@Entity("feature", { schema: "aplikacija" })
+@Index("uq_feature_name_category_id", ["name", "categoryId"], { unique: true })
+@Entity("feature")
 export class Feature {
   @PrimaryGeneratedColumn({ type: "int", name: "feature_id", unsigned: true })
   featureId: number;
 
-  @Column("varchar", { name: "name", length: 32, default: () => "'0'" })
+  @Column({ type: "varchar", length: 32 })
   @Validator.IsNotEmpty()
   @Validator.IsString()
-  @Validator.Length(5, 32)
+  @Validator.Length(3, 32)
   name: string;
 
-  @Column("int", { name: "category_id", unsigned: true, default: () => "'0'" })
+  @Column({ type: "int", name: "category_id", unsigned: true })
   categoryId: number;
 
-  @OneToMany(() => ArticleFeature, (articleFeature) => articleFeature.feature)
+  @OneToMany(
+    () => ArticleFeature,
+    articleFeature => articleFeature.feature
+  )
   articleFeatures: ArticleFeature[];
 
   @ManyToMany(type => Article, article => article.features)
@@ -41,10 +44,11 @@ export class Feature {
   })
   articles: Article[];
 
-  @ManyToOne(() => Category, (category) => category.features, {
-    onDelete: "RESTRICT",
-    onUpdate: "CASCADE",
-  })
+  @ManyToOne(
+    () => Category,
+    category => category.features,
+    { onDelete: "NO ACTION", onUpdate: "CASCADE" }
+  )
   @JoinColumn([{ name: "category_id", referencedColumnName: "categoryId" }])
   category: Category;
 }

@@ -2,19 +2,19 @@ import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 import * as Validator from 'class-validator';
 
 @Index("uq_administrator_username", ["username"], { unique: true })
-@Entity("administrator", { schema: "aplikacija" })
+@Entity("administrator")
 export class Administrator {
   @PrimaryGeneratedColumn({
     type: "int",
     name: "administrator_id",
-    unsigned: true,
+    unsigned: true
   })
   administratorId: number;
 
   @Column({
     type: "varchar",
     unique: true,
-    length: 32,
+    length: 32
   })
   @Validator.IsNotEmpty()
   @Validator.IsString()

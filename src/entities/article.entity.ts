@@ -3,11 +3,11 @@ import {
   Entity,
   Index,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  JoinTable,
+  ManyToMany
 } from "typeorm";
 import { Category } from "./category.entity";
 import { ArticleFeature } from "./article-feature.entity";
@@ -16,66 +16,72 @@ import { CartArticle } from "./cart-article.entity";
 import { Photo } from "./photo.entity";
 import { Feature } from "./feature.entity";
 import * as Validator from 'class-validator';
-import { ArticleStatus } from "src/types/article.status.enum";
 
 @Index("fk_article_category_id", ["categoryId"], {})
-@Entity("article", { schema: "aplikacija" })
+@Entity("article")
 export class Article {
   @PrimaryGeneratedColumn({ type: "int", name: "article_id", unsigned: true })
   articleId: number;
 
-  @Column("varchar", { name: "name", length: 128 })
+  @Column({ type: "varchar", length: 128 })
   @Validator.IsNotEmpty()
   @Validator.IsString()
   @Validator.Length(5, 128)
   name: string;
 
-  @Column("int", { name: "category_id", unsigned: true, default: () => "'0'" })
+  @Column({ type: "int", name: "category_id", unsigned: true })
   categoryId: number;
 
-  @Column("varchar", { name: "excerpt", length: 255, default: () => "'0'" })
+  @Column({ type: "varchar", length: 255 })
   @Validator.IsNotEmpty()
   @Validator.IsString()
   @Validator.Length(10, 255)
   excerpt: string;
 
-  @Column("text", { name: "description" })
+  @Column({ type: "text" })
   @Validator.IsNotEmpty()
   @Validator.IsString()
   @Validator.Length(64, 10000)
   description: string;
 
-  @Column("enum", {
-    name: "status",
+  @Column({
+    type: "enum",
     enum: ["available", "visible", "hidden"],
-    default: () => "'available'",
+    default: () => "'available'"
   })
   @Validator.IsNotEmpty()
   @Validator.IsString()
-  @Validator.IsEnum(ArticleStatus) // možemo ovako, samo treba da napravimo i article status
-  // a mogli smo i ovako: @Validator.IsIn(["available", "visible", "hidden"])
+  @Validator.IsIn(["available", "visible", "hidden"])
   status: "available" | "visible" | "hidden";
 
-  @Column("tinyint", { name: "is_promoted", unsigned: true })
+  @Column({
+    type: "tinyint",
+    name: "is_promoted",
+    unsigned: true
+  })
   @Validator.IsNotEmpty()
   @Validator.IsIn([0, 1])
   isPromoted: number;
 
-  @Column("timestamp", {
+  @Column({
+    type: "timestamp",
     name: "created_at",
-    nullable: true,
-    default: () => "CURRENT_TIMESTAMP",
+    default: () => "CURRENT_TIMESTAMP"
   })
-  createdAt: Date | null;
+  createdAt: Date;
 
-  @ManyToOne(() => Category, (category) => category.articles, {
-    onDelete: "RESTRICT",
-    onUpdate: "CASCADE",
-  })
+  @ManyToOne(
+    () => Category,
+    category => category.articles,
+    { onDelete: "NO ACTION", onUpdate: "CASCADE" }
+  )
   @JoinColumn([{ name: "category_id", referencedColumnName: "categoryId" }])
   category: Category;
 
-  @OneToMany(() => ArticleFeature, (articleFeature) => articleFeature.article)
+  @OneToMany(
+    () => ArticleFeature,
+    articleFeature => articleFeature.article
+  )
   articleFeatures: ArticleFeature[];
 
   @ManyToMany(type => Feature, feature => feature.articles)
@@ -86,12 +92,21 @@ export class Article {
   })
   features: Feature[];
 
-  @OneToMany(() => ArticlePrice, (articlePrice) => articlePrice.article)
+  @OneToMany(
+    () => ArticlePrice,
+    articlePrice => articlePrice.article
+  )
   articlePrices: ArticlePrice[];
 
-  @OneToMany(() => CartArticle, (cartArticle) => cartArticle.article)
+  @OneToMany(
+    () => CartArticle,
+    cartArticle => cartArticle.article
+  )
   cartArticles: CartArticle[];
 
-  @OneToMany(() => Photo, (photo) => photo.article)
+  @OneToMany(
+    () => Photo,
+    photo => photo.article
+  )
   photos: Photo[];
 }

@@ -5,13 +5,13 @@ import {
 } from "typeorm";
 import * as Validator from 'class-validator';
 
-@Entity("user_token")
-export class UserToken {
-  @PrimaryGeneratedColumn({ type: "int", name: "user_token_id", unsigned: true })
-  userTokenId: number;
+@Entity("administrator_token")
+export class AdministratorToken {
+  @PrimaryGeneratedColumn({ type: "int", name: "administrator_token_id", unsigned: true })
+  administratorTokenId: number;
 
-  @Column({ type: "int", name: "user_id", unsigned: true })
-  userId: number;
+  @Column({ type: "int", name: "administrator_id", unsigned: true })
+  administratorId: number;
 
   @Column({ type: "timestamp", name: "created_at" })
   createdAt: string;

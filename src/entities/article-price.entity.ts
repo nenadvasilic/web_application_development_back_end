@@ -4,30 +4,29 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn,
+  PrimaryGeneratedColumn
 } from "typeorm";
 import { Article } from "./article.entity";
 import * as Validator from 'class-validator';
 
 @Index("fk_article_price_article_id", ["articleId"], {})
-@Entity("article_price", { schema: "aplikacija" })
+@Entity("article_price")
 export class ArticlePrice {
   @PrimaryGeneratedColumn({
     type: "int",
     name: "article_price_id",
-    unsigned: true,
+    unsigned: true
   })
   articlePriceId: number;
 
-  @Column("int", { name: "article_id", unsigned: true })
+  @Column({ type: "int", name: "article_id", unsigned: true })
   articleId: number;
 
-  @Column("decimal", {
-    name: "price",
+  @Column({
+    type: "decimal",
     unsigned: true,
     precision: 10,
-    scale: 2,
-    default: () => "'0.00'",
+    scale: 2
   })
   @Validator.IsNotEmpty()
   @Validator.IsPositive()
@@ -38,16 +37,18 @@ export class ArticlePrice {
   })
   price: number;
 
-  @Column("timestamp", {
+  @Column({
+    type: "timestamp",
     name: "created_at",
-    default: () => "CURRENT_TIMESTAMP",
+    default: () => "CURRENT_TIMESTAMP"
   })
   createdAt: Date;
 
-  @ManyToOne(() => Article, (article) => article.articlePrices, {
-    onDelete: "RESTRICT",
-    onUpdate: "CASCADE",
-  })
+  @ManyToOne(
+    () => Article,
+    article => article.articlePrices,
+    { onDelete: "NO ACTION", onUpdate: "CASCADE" }
+  )
   @JoinColumn([{ name: "article_id", referencedColumnName: "articleId" }])
   article: Article;
 }

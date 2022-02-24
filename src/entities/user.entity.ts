@@ -3,69 +3,71 @@ import {
   Entity,
   Index,
   OneToMany,
-  PrimaryGeneratedColumn,
+  PrimaryGeneratedColumn
 } from "typeorm";
 import { Cart } from "./cart.entity";
 import * as Validator from 'class-validator';
 
 @Index("uq_user_email", ["email"], { unique: true })
 @Index("uq_user_phone_number", ["phoneNumber"], { unique: true })
-@Entity("user", { schema: "aplikacija" })
+@Entity("user")
 export class User {
   @PrimaryGeneratedColumn({ type: "int", name: "user_id", unsigned: true })
   userId: number;
 
-  @Column("varchar", {
-    name: "email",
+  @Column({
+    type: "varchar",
     unique: true,
-    length: 255,
-    default: () => "'0'",
+    length: 255
   })
   @Validator.IsNotEmpty()
   @Validator.IsEmail({
-    allow_ip_domain: false, // ne može na primer: 'mtair@127.0.0.1
+    allow_ip_domain: false,
     allow_utf8_local_part: true,
-    require_tld: true, // mora mejl da ima na kraju: '.com'
+    require_tld: true,
   })
   email: string;
 
-  @Column("varchar", {
+  @Column({
+    type: "varchar",
     name: "password_hash",
-    length: 128,
-    default: () => "'0'",
+    length: 128
   })
   @Validator.IsNotEmpty()
   @Validator.IsHash('sha512')
   passwordHash: string;
 
-  @Column("varchar", { name: "forename", length: 64, default: () => "'0'" })
+  @Column({ type: "varchar", length: 64 })
   @Validator.IsNotEmpty()
   @Validator.IsString()
   @Validator.Length(2, 64)
   forename: string;
 
-  @Column("varchar", { name: "surname", length: 64, default: () => "'0'" })
+  @Column({ type: "varchar", length: 64 })
   @Validator.IsNotEmpty()
   @Validator.IsString()
   @Validator.Length(2, 64)
   surname: string;
 
-  @Column("varchar", {
+  @Column({
+    type: "varchar",
     name: "phone_number",
     unique: true,
-    length: 24,
-    default: () => "'0'",
+    length: 24
   })
   @Validator.IsNotEmpty()
-  @Validator.IsPhoneNumber(null) // korisnik mora da ukuca na primer: '+381...'
+  @Validator.IsPhoneNumber(null)
   phoneNumber: string;
 
-  @Column("text", { name: "postal_address" })
+  @Column({ type: "text", name: "postal_address" })
   @Validator.IsNotEmpty()
   @Validator.IsString()
   @Validator.Length(10, 512)
   postalAddress: string;
 
-  @OneToMany(() => Cart, (cart) => cart.user)
+  @OneToMany(
+    () => Cart,
+    cart => cart.user
+  )
   carts: Cart[];
 }
