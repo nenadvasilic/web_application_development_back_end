@@ -64,7 +64,7 @@ export class OrderService {
     async getAllByUserId(userId: number) {
         return await this.order.find({
             where: {
-                userId: userId,
+                cartId: userId, // userId: userId,
             },
             relations: [
                 "cart",
